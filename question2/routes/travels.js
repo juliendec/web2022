@@ -1,6 +1,6 @@
 const express = require('express');
 const path = require('node:path');
-const test = require('../node_modules/uuid');
+const { v4: uuidv4 } = require('uuid');
 const { serialize, parse } = require('../utils/json');
 
 const router = express.Router();
@@ -15,7 +15,7 @@ router.post('/', (req, res) => {
   if (!title || !content) return res.sendStatus(400); // error code '400 Bad request'
   const travels = parse(jsonDbPath);
   const newTravel = {
-    id: test.v4(),
+    id: uuidv4(),
     title,
     content,
   };

@@ -5,7 +5,7 @@ POST {{baseUrl}}/travels
 Content-Type: application/json
 
 {
-    "title":"Amsterdam",
+    "title":"New-York",
     "content":"la ville d'amsterdam est bien connu pour ses ponts."
 }
 
