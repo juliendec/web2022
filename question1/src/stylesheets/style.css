@@ -1,0 +1,8 @@
+
+div.all-destination img.destination-image.active{
+    display: block;
+}
+
+div.all-destination img.destination-image{
+    display: none;
+}

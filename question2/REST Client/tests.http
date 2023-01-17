@@ -1,0 +1,30 @@
+@baseUrl = http://localhost:3000
+
+### Create a place
+POST {{baseUrl}}/travels
+Content-Type: application/json
+
+{
+    "title":"Amsterdam",
+    "content":"la ville d'amsterdam est bien connu pour ses ponts."
+}
+
+### Create a user
+
+POST {{baseUrl}}/users/register
+Content-Type: application/json
+
+{
+    "nom":"ui",
+    "email":"julien@email.com"
+}
+
+### Like a place
+
+POST {{baseUrl}}/favories
+Content-Type: application/json
+
+{
+    "idUser":"1",
+    "idLieu":"120c9f2c-3af6-4cb1-ba76-b9248a46a8b1"
+}

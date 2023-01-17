@@ -1,0 +1,15 @@
+
+div.all-destination img.destination-image{
+    display: block;
+    width: 500px;
+    height: auto;
+    margin: auto;
+}
+
+div.all-destination .info-ville {
+    display: none;
+}
+
+div.all-destination .info-ville.active {
+    display: block;
+}
