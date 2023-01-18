@@ -1,0 +1,231 @@
+Toutes les fonctions pour l'api (module 5, tout en bas)
+
+Erreur Cors : (module 6)
+- soit regler via Cors
+	npm i cors
+	ajouter dans le app.js :
+		const cors = require('cors');
+
+		const corsOptions = {
+  			origin: 'http://localhost:8080',
+		};
+		
+		app.use('/pizzas', cors(corsOptions), pizzaRouter);
+
+- soit via un proxy (plus simple) (module 6)
+	aller voir le fichier webpack.config.js
+	vérifier où pointe le pathRewrite (ici, sur /api)
+	dans l'appel fetch de la page pointer vers /api/pizzas et NON /pizzas
+
+
+appel à une API depuis le Front-end (GET, obtention de donnée) (module 6) :
+	try {
+    		clearPage();
+
+    		const response = await fetch('/api/pizzas');
+
+    		if (!response.ok) throw new Error(`fetch error : ${response.status} : ${response.statusText}`);
+
+    		const pizzas = await response.json();
+
+    		autreFonction(pizzas);
+  	} catch (err) {
+    		console.error('HomePage::error: ', err);
+  	}
+
+
+appel à une API depuis le front-end (POST, ajout de donnée) (module 6) :
+  	const options = {
+    		method: 'POST',
+    		  body: JSON.stringify({
+      		  title : titleIn,
+      		  content : contentIn,
+    		}),
+
+    		headers: {
+      		  'Content-Type': 'application/json',
+    		},
+  	};
+
+ 	const response = await fetch('/api/pizzas', options); // fetch return a promise => we wait for the response
+
+  	if (!response.ok) throw new Error(`fetch error : ${response.status} : ${response.statusText}`);
+
+  	const newPizza = await response.json(); // json() returns a promise => we wait for the data$
+
+PARSE (module 5) :
+	parse(fileJSONPath, defaultArray);
+		parse permet de RECUPERER tout les elements du fichier JSON, si le fichier JSON existe pas, alors defaultArray sera renvoyé
+
+SERIALIZE (module 5) :
+	serialize(fileJSONPath, object);
+		serialize permet de mettre l'objet sous forme JSON dans le fichier .JSON 
+		(l'objet en paramètre, en fait, un serialize précédement fait, au quel on a rajouter un element (JSONRecuperer = push(Element) )
+
+
+creation login et register coté API (debut de module 7) 
+creation login et register coté Front-end (vers milieu de module 7) 
+
+donner les droits de créer seulement à l'admin (module 7, presque moitier) :
+
+	// Create a pizza to be added to the menu.
+	router.post('/', authorize, isAdmin, (req, res) => {
+		...
+		- ici la methode create pizza va lancer authorize et is admin
+		- authorize va regarder si un element "authorization" est passé en params (GET, authorization est le token de l'user) 
+			si oui, il va mettre une variable global de l'user dans une variable de session au de l'utilisateur (si c'est bien admin qui s'est connecter).
+			si tout va bien, il lance next() et create pizza continue.
+		- isAdmin check si la variable de session est bien au nom Admin. si tout va bien, il lance next() et create pizza continue.
+	})
+
+
+hack injection JS (fin module 7) :
+	npm i escape-html
+	const escape = require('escape-html'); // dans le fichier coté API concerner, ici model/pizza.js
+	escape(title) => fonction escape permet d'échapper et donc "annuler" le html // dans le fichier coté API concerner, ici model/pizza.js
+
+
+Hasher le password (fin module 7) :
+	npm i bcrypt
+	const bcrypt = require('bcrypt'); // dans le fichier coté API concerner, ici model/user.js
+	const saltRounds = 10; // dans le fichier coté API concerner, ici model/user.js
+	const passwordMatch = await bcrypt.compare(password, userFound.password); // dans le fichier coté API concerner, ici model/user.js + faut mettre la function en async
+
+
+schema coté API après création de pizza, user (donc login, register, ajouter une pizza, encrypter, ...)
+	data
+		pizzas.json -> contient le JSON de pizza
+		users.json -> contient le JSON users
+	models
+		pizzas.js -> contient l'array par default, toutes les fonctions d'ajout, suppressions, update, ... qui seront lancer par d'autres fichiers
+		users.js -> contient le default user (admin), toutes les fonctions de login, register, create user, ... qui seront lancer par d'autres fichiers
+	REST Client
+		auths.http -> permet de tester nos call API des users via l'extension VS Code "REST Client"
+		pizzas.http -> permet de tester nos call API des pizzas via l'extension VS Code "REST Client"
+	routes 
+		auths.js -> les différentes routes pour register, login un user, c'est ici que les fonctions du model users.js seront utilisé !
+		pizzas.js -> les différentes routes pour ajouter, supprimer, update une pizza, c'est ici que les fonctions du model pizzas.js seront utilisé !
+	Utils
+		auths.js -> contient les fonctions authorize() et isAdmin() qui permettent de créer une variable de session à propos d'un user
+		json.js -> contient les fonctions parse() et serialize() qui permettent de "jouer" avec les fichiers JSON de data
+	app.js  -> contient les appels de fichiers et les routes qui sont liés à ceux-ci
+
+
+Données de session (module 8) :
+sous forme de clé valeur (clé = user)
+
+	- créer une donnée de session dans le local storage :
+		const STORE_NAME = 'user';
+
+		const setUserSessionData = (user) => {
+  			const storageValue = JSON.stringify(user);
+  			localStorage.setItem(STORE_NAME, storageValue);
+		};
+	
+	- obtenir info du local storage :
+		const STORE_NAME = 'user';
+
+		const getUserSessionData = () => {
+  			const retrievedUser = localStorage.getItem(STORE_NAME);
+  			if (!retrievedUser) return;
+  			return JSON.parse(retrievedUser);
+		};
+
+	- suuprimer info du local storage :
+		const STORE_NAME = 'user';
+
+		const removeSessionData = () => {
+  			localStorage.removeItem(STORE_NAME);
+		};
+
+Cookies (module 8) :
+	npm i cookie-session
+
+Déploiment (milieu/fin module 8)
+
+
+
+-------------- TIPS ------------------
+
+` `
+
+import JokesJSON from "../../utils/jokes";
+
+const { v4: uuidv4 } = require('uuid');
+
+
+document.querySelectorAll("img");
+document.querySelector("img");
+
+
+return Math.floor(Math.random() * (max - min + 1) + min)
+
+mouseover
+click
+mouseout
+
+const images = document.querySelectorAll('img');
+  images.forEach((img) => {
+    img.addEventListener('click', (elem) => {
+        elem.preventDefault();
+        console.log("click");
+	const imgIdElement = img.dataset.id;
+    })
+  })
+
+
+
+function retrouverUser(IdIn) {
+  const users = parse(jsonDbPathUser);
+  const IdInNumber = Number(IdIn);
+  const indexOfUserFound = users.findIndex((user) => user.id === IdInNumber);
+  if (indexOfUserFound < 0) return false;
+  console.log('user existe');
+  return true;
+}
+
+
+
+const JSON = [
+  {
+    "id": 1,
+    "question": "Why are modern programming languages so materialistic?",
+    "answer": "Because they are object-oriented.",
+    "category": "Programming"
+  }
+]
+
+const Json = () => [
+  {
+    "id": 1,
+    "question": "Why are modern programming languages so materialistic?",
+    "answer": "Because they are object-oriented.",
+    "category": "Programming"
+  }
+  ,
+  {"id": 2,
+    "question": "What's the object-oriented way to become wealthy?",
+    "answer": "Inheritance.",
+    "category": "Programming"
+  }
+] ( le meilleur !!)
+  
+
+
+export default JSON;
+ 
+module.exports = {
+    readAllJokes,
+    readOneJoke,
+    createOneJoke,
+    deleteOneJoke,
+    updateOnejoke,
+ };
+  
+
+
+---------------------------------------
+
+
+Bonne merde pour l'examen grand fou
+
